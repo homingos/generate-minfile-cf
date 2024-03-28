@@ -43,14 +43,13 @@ jobs:
             --trigger-http \
             --gen2 \
             --region ${{ env.REGION }} \
-            --runtime python39 \
+            --runtime nodejs20 \
             --min-instances 0 \
             --max-instances 10 \
             --memory 16GiB \
             --entry-point=function_handler \
             --timeout=540 \
             --update-env-vars GCP_PROJECT=${{ env.PROJECT_ID }}
-
       - name: Set Cloud Run CPU limits
         run: |
           gcloud run services update ${{ env.FUNCTION_NAME }} --cpu 6 --concurrency 1000 --region ${{ env.REGION }}
