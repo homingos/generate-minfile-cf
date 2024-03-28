@@ -1,0 +1,55 @@
+name: Deploy Cloud Function
+
+on:
+  push:
+    branches:
+      - dev
+      - master
+
+env:
+  PROJECT_ID: ${{ github.ref == 'refs/heads/master' && secrets.PROD_PROJECT_ID || secrets.DEV_PROJECT_ID }}
+  REGION: ${{ secrets.GCP_REGION }}
+  FUNCTION_NAME: ${GITHUB_REPOSITORY#*/}
+  SERVICE_ACCOUNT_KEY: ${{ github.ref == 'refs/heads/master' && secrets.PROD_SERVICE_ACCOUNT_KEY|| secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: ${{ env.SERVICE_ACCOUNT_KEY }}
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+        with:
+          version: '>= 363.0.0'
+      
+      - name: 'Set GCP Project'
+        run: |
+          echo ${{ github.ref }}
+          gcloud config set project ${{ env.PROJECT_ID }} 
+          
+      - name: Deploy Cloud Function
+        run: |
+          gcloud functions deploy ${{ env.FUNCTION_NAME }} \
+            --gen2 \
+            --region ${{ env.REGION }} \
+            --runtime python39 \
+            --min-instances 0 \
+            --max-instances 10 \
+            --memory 16GiB \
+            --entry-point=function_handler \
+            --timeout=540 \
+            --update-env-vars GCP_PROJECT=${{ env.PROJECT_ID }}
+
+      - name: Set Cloud Run CPU limits
+        run: |
+          gcloud run services update ${{ env.FUNCTION_NAME }} --cpu 6 --concurrency 1000 --region ${{ env.REGION }}
