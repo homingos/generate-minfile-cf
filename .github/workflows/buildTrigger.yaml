@@ -40,7 +40,7 @@ jobs:
       - name: Deploy Cloud Function
         uses: 'google-github-actions/deploy-cloud-functions@v2'
         with:
-          name: 'helloHttp'
+          name: ${{ env.FUNCTION_NAME }}
           runtime: 'nodejs20'
         # run: |
         #   gcloud functions deploy ${{ env.FUNCTION_NAME }} \
