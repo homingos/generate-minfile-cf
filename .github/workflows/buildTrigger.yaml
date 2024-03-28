@@ -38,21 +38,18 @@ jobs:
           gcloud config set project ${{ env.PROJECT_ID }} 
           
       - name: Deploy Cloud Function
-        uses: 'google-github-actions/deploy-cloud-functions@v2'
-        with:
-          name: ${{ env.FUNCTION_NAME }}
-          runtime: 'nodejs20'
-        # run: |
-        #   gcloud functions deploy ${{ env.FUNCTION_NAME }} \
-        #     --gen2 \
-        #     --region ${{ env.REGION }} \
-        #     --runtime python39 \
-        #     --min-instances 0 \
-        #     --max-instances 10 \
-        #     --memory 16GiB \
-        #     --entry-point=function_handler \
-        #     --timeout=540 \
-        #     --update-env-vars GCP_PROJECT=${{ env.PROJECT_ID }}
+        run: |
+          gcloud functions deploy ${{ env.FUNCTION_NAME }} \
+            --trigger-http \
+            --gen2 \
+            --region ${{ env.REGION }} \
+            --runtime python39 \
+            --min-instances 0 \
+            --max-instances 10 \
+            --memory 16GiB \
+            --entry-point=function_handler \
+            --timeout=540 \
+            --update-env-vars GCP_PROJECT=${{ env.PROJECT_ID }}
 
       - name: Set Cloud Run CPU limits
         run: |
