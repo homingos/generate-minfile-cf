@@ -19,11 +19,11 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v1'
+        uses: 'google-github-actions/auth@v2'
         with:
           credentials_json: ${{ env.SERVICE_ACCOUNT_KEY }}
 
@@ -38,17 +38,21 @@ jobs:
           gcloud config set project ${{ env.PROJECT_ID }} 
           
       - name: Deploy Cloud Function
-        run: |
-          gcloud functions deploy ${{ env.FUNCTION_NAME }} \
-            --gen2 \
-            --region ${{ env.REGION }} \
-            --runtime python39 \
-            --min-instances 0 \
-            --max-instances 10 \
-            --memory 16GiB \
-            --entry-point=function_handler \
-            --timeout=540 \
-            --update-env-vars GCP_PROJECT=${{ env.PROJECT_ID }}
+        uses: 'google-github-actions/deploy-cloud-functions@v2'
+        with:
+          name: 'helloHttp'
+          runtime: 'nodejs20'
+        # run: |
+        #   gcloud functions deploy ${{ env.FUNCTION_NAME }} \
+        #     --gen2 \
+        #     --region ${{ env.REGION }} \
+        #     --runtime python39 \
+        #     --min-instances 0 \
+        #     --max-instances 10 \
+        #     --memory 16GiB \
+        #     --entry-point=function_handler \
+        #     --timeout=540 \
+        #     --update-env-vars GCP_PROJECT=${{ env.PROJECT_ID }}
 
       - name: Set Cloud Run CPU limits
         run: |
