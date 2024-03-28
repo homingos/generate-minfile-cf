@@ -40,7 +40,7 @@ jobs:
       - name: Deploy Cloud Function
         uses: 'google-github-actions/deploy-cloud-functions@v2'
         with:
-          name: helloHttp
+          name: hellohttp
           runtime: 'nodejs20'
         # run: |
         #   gcloud functions deploy ${{ env.FUNCTION_NAME }} \
@@ -56,4 +56,4 @@ jobs:
         #     --update-env-vars GCP_PROJECT=${{ env.PROJECT_ID }}
       - name: Set Cloud Run CPU limits
         run: |
-          gcloud run services update helloHttp --cpu 6 --concurrency 1000 --region ${{ env.REGION }}
+          gcloud run services update hellohttp --cpu 6 --concurrency 1000 --region ${{ env.REGION }}
