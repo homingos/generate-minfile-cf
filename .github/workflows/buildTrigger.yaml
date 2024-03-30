@@ -51,7 +51,8 @@ jobs:
             --min-instances 0 \
             --max-instances 10 \
             --memory 16GiB \
-            --entry-point=function_handler \
+            --entry-point=generate-minfile-cf \
+            --allow-unauthenticated
             --timeout=540 \
             --update-env-vars GCP_PROJECT=${{ env.PROJECT_ID }}
       - name: Set Cloud Run CPU limits
