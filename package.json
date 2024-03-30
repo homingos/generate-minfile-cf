@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "npm run",
     "gcp-build": "node node_modules/puppeteer/install.js"
