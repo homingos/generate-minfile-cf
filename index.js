@@ -113,7 +113,7 @@ const uploadToGCS = async (file_location, bucket_name, upload_prefix, final_outp
 
 
 
-functions.http('helloHttp', async (req, res) => {
+functions.http('generate-minfile-cf', async (req, res) => {
   // Launch the browser and open a new blank page
   let imgUrl = req.query.img;
   let objectId = req.query.id;
