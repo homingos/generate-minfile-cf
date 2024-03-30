@@ -160,7 +160,7 @@ functions.http('generate-minfile-cf', async (req, res) => {
       downloadPath: "./temp",
     });
 
-    console.log("80%");
+    await delay(4000);
 
     // // Locate the full title with a unique string
     const startDownloadSelector = ".startButton_OY2G";
