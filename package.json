@@ -5,16 +5,18 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "npm run"
+    "test": "npm run",
+    "gcp-build": "node node_modules/puppeteer/install.js"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
+  "devDependencies": {
     "@google-cloud/functions-framework": "^3.3.0",
     "@google-cloud/storage": "^7.9.0",
+  },
+  "dependencies": {
     "axios": "^1.6.8",
     "express": "^4.19.2",
     "puppeteer": "^22.6.1",
-    "puppeteer-utilz": "^4.0.8"
   }
 }
