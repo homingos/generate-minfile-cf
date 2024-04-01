@@ -1,13 +1,16 @@
 import axios from "axios";
 import fs from "fs";
+import express from "express";
 import puppeteer from "puppeteer";
 import { Storage } from '@google-cloud/storage';
-import * as  functions from '@google-cloud/functions-framework';
 
+
+const app = express();
 
 function delay(time) {
   return new Promise((resolve) => setTimeout(resolve, time));
 }
+
 
 export const waitForDownload = async (path, targetFileName, timeout) => {
   if (timeout) {
@@ -95,7 +98,7 @@ const uploadToGCS = async (file_location, bucket_name, upload_prefix, final_outp
   return new Promise(async (resolve, reject) => {
     const storage = new Storage();
     const bucket = storage.bucket(bucket_name);
-    
+
     try {
       const destinationPath = `${upload_prefix}${final_output_name}`
       await bucket.upload(file_location, {
@@ -113,7 +116,7 @@ const uploadToGCS = async (file_location, bucket_name, upload_prefix, final_outp
 
 
 
-functions.http('generate-minfile-cf', async (req, res) => {
+app.get('/generate-mindfile', async (req, res) => {
   // Launch the browser and open a new blank page
   let imgUrl = req.query.img;
   let objectId = req.query.id;
@@ -202,3 +205,6 @@ functions.http('generate-minfile-cf', async (req, res) => {
     console.error("Error uploading and downloading file:", error);
   }
 });
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, '0.0.0.0',() => console.log(`Server is running on Port: ${PORT}`))

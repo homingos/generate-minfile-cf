@@ -2,15 +2,15 @@
   "name": "puppeteer-mind",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.mjs",
   "type": "module",
   "scripts": {
+    "start": "node index.mjs",
     "test": "npm run"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/functions-framework": "^3.3.0",
     "@google-cloud/storage": "^7.9.0",
     "axios": "^1.6.8",
     "express": "^4.19.2",
