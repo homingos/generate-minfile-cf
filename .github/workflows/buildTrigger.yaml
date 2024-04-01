@@ -38,22 +38,23 @@ jobs:
           gcloud config set project ${{ env.PROJECT_ID }} 
           
       - name: Deploy Cloud Function
-        # uses: 'google-github-actions/deploy-cloud-functions@v2'
-        # with:
-        #   name: helloHttp
-        #   runtime: 'nodejs20'
-        run: |
-          gcloud functions deploy ${{ env.FUNCTION_NAME }} \
-            --trigger-http \
-            --gen2 \
-            --region ${{ env.REGION }} \
-            --runtime nodejs20 \
-            --min-instances 0 \
-            --max-instances 10 \
-            --memory 16GiB \
-            --entry-point=function_handler \
-            --timeout=540 \
-            --update-env-vars GCP_PROJECT=${{ env.PROJECT_ID }}
-      - name: Set Cloud Run CPU limits
-        run: |
-          gcloud run services update ${{ env.FUNCTION_NAME }} --cpu 6 --concurrency 1000 --region ${{ env.REGION }}
+        uses: 'google-github-actions/deploy-cloud-functions@v2'
+        with:
+          name: generate-minfile-cf
+          runtime: 'nodejs20'
+      #   run: |
+      #     gcloud functions deploy ${{ env.FUNCTION_NAME }} \
+      #       --trigger-http \
+      #       --gen2 \
+      #       --region ${{ env.REGION }} \
+      #       --runtime nodejs20 \
+      #       --min-instances 0 \
+      #       --max-instances 10 \
+      #       --memory 16GiB \
+      #       --entry-point=generate-minfile-cf \
+      #       --allow-unauthenticated
+      #       --timeout=540 \
+      #       --update-env-vars GCP_PROJECT=${{ env.PROJECT_ID }}
+      # - name: Set Cloud Run CPU limits
+      #   run: |
+      #     gcloud run services update ${{ env.FUNCTION_NAME }} --cpu 6 --concurrency 1000 --region ${{ env.REGION }}

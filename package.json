@@ -14,7 +14,6 @@
     "@google-cloud/storage": "^7.9.0",
     "axios": "^1.6.8",
     "express": "^4.19.2",
-    "puppeteer": "^22.6.1",
-    "puppeteer-utilz": "^4.0.8"
+    "puppeteer": "^22.6.1"
   }
 }
