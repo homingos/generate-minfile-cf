@@ -128,6 +128,14 @@ app.get('/generate-mindfile', async (req, res) => {
   }
 
   const browser = await puppeteer.launch();
+  // const browser = await puppeteer.launch({
+  //   headless: true,
+  //   executablePath: '/usr/bin/chromium-browser',
+  //   args: [
+  //     '--no-sandbox',
+  //     // '--disable-gpu',
+  //   ]
+  // });
 
   const page = await browser.newPage();
 
@@ -151,11 +159,24 @@ app.get('/generate-mindfile', async (req, res) => {
     console.log("30%");
 
     // Wait and click on first result
-    const startSelector = ".startButton_OY2G";
+    const startSelector = "button ::-p-text(Start)";
     await page.waitForSelector(startSelector);
     await page.click(startSelector);
 
     console.log("50%");
+
+    while(true) {
+      const data = await page.evaluate(
+        () => document.querySelector(".padding-vert--md").outerHTML
+      );
+      try {
+        const startDownloadSelector = "div ::-p-text(Progress: )";
+        await page.waitForSelector(startDownloadSelector);
+      } catch {
+        break;
+      }
+      console.log(data);
+    }
 
     const client = await page.createCDPSession();
     await client.send("Page.setDownloadBehavior", {
@@ -163,10 +184,9 @@ app.get('/generate-mindfile', async (req, res) => {
       downloadPath: "./temp",
     });
 
-    await delay(4000);
+    console.log("80%");
 
-    // // Locate the full title with a unique string
-    const startDownloadSelector = ".startButton_OY2G";
+    const startDownloadSelector = "button ::-p-text(Download compiled)";
     await page.waitForSelector(startDownloadSelector);
     await page.click(startDownloadSelector);
 
@@ -177,8 +197,9 @@ app.get('/generate-mindfile', async (req, res) => {
 
     if (objectId) {
       const bucketName = "zingcam";
-      const uploadPrefix = `flam/${env}/mindfile/`;
+      const uploadPrefix = `flam/${env}/mindfiles/`;
       const mindFileUrl = await uploadToGCS(`./temp/${filename}`, bucketName, uploadPrefix, `${objectId}.mind`);
+      console.log(mindFileUrl);
       let postbackPayload = {
         "instant_id": objectId,
         "mind_url": mindFileUrl
@@ -207,4 +228,4 @@ app.get('/generate-mindfile', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0',() => console.log(`Server is running on Port: ${PORT}`))
+app.listen(PORT, () => console.log(`Server is running on Port: ${PORT}`))

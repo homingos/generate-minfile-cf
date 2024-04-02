@@ -1,28 +1,21 @@
-# Base Image: Use a lean Alpine base for smaller image size
-FROM node:lts-alpine 
+FROM node:lts-alpine
 
-# Environment Variable: Prevent Chromium download for faster builds   
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+WORKDIR /app
 
-# Install dependencies 
-WORKDIR /usr/src/app 
-RUN apk add --no-cache \
-      chromium \
-      nss \
-      ca-certificates
-# Bundle your Node.js application
-COPY package*.json ./
-RUN npm install 
+# Google Chrome
 
-# Copy your application code
-COPY . .
+# RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+# 	&& echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
+# 	&& apt-get update -qqy \
+# 	&& apt-get -qqy install google-chrome-stable \
+# 	&& rm /etc/apt/sources.list.d/google-chrome.list \
+# 	&& rm -rf /var/lib/apt/lists/* /var/cache/apt/* \
+# 	&& sed -i 's/"$HERE\/chrome"/xvfb-run "$HERE\/chrome" --no-sandbox/g' /opt/google/chrome/google-chrome
 
-# Optimize for production (optional)
-# If you have a production build step
-# RUN npm run build
+COPY . /app
 
-# Expose a port (adjust if you use a different port in your app)
+RUN npm install
+RUN npx puppeteer browsers install chrome
 EXPOSE 3000
 
-# Command to run your application when the container starts
-CMD [ "npm", "start" ] 
+CMD ["npm", "start"]
