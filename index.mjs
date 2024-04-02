@@ -165,18 +165,18 @@ app.get('/generate-mindfile', async (req, res) => {
 
     console.log("50%");
 
-    while(true) {
-      const data = await page.evaluate(
-        () => document.querySelector(".padding-vert--md").outerHTML
-      );
-      try {
-        const startDownloadSelector = "div ::-p-text(Progress: )";
-        await page.waitForSelector(startDownloadSelector);
-      } catch {
-        break;
-      }
-      console.log(data);
-    }
+    // while(true) {
+    //   const data = await page.evaluate(
+    //     () => document.querySelector(".padding-vert--md").outerHTML
+    //   );
+    //   try {
+    //     const startDownloadSelector = "div ::-p-text(Progress: )";
+    //     await page.waitForSelector(startDownloadSelector);
+    //   } catch {
+    //     break;
+    //   }
+    //   console.log(data);
+    // }
 
     const client = await page.createCDPSession();
     await client.send("Page.setDownloadBehavior", {
