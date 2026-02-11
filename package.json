@@ -11,8 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/storage": "^7.9.0",
-    "axios": "^1.6.8",
+    "@google-cloud/storage": "^7.19.0",
+    "axios": "^1.13.5",
     "express": "^4.19.2",
     "puppeteer": "^22.6.1"
   }
